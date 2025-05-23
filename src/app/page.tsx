@@ -18,48 +18,47 @@ export default function Home() {
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("todos");
-    if (stored) {
-      setTodos(JSON.parse(stored));
-    }
+    fetch("/api/todos")
+      .then((res) => res.json())
+      .then((data) => setTodos(data))
+      .catch(() => setToast("Failed to load todos"))
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) return <Loader />;
-
-  const addTodo = () => {
+  const addTodo = async () => {
     if (!input.trim()) return;
-    const newTodo: Todo = {
-      id: Date.now(),
-      text: input,
-      completed: false,
-    };
+    const res = await fetch("/api/todos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input }),
+    });
+    const newTodo = await res.json();
     setTodos([newTodo, ...todos]);
     setInput("");
     setToast("Task added 🎉");
   };
 
-  const toggleTodo = (id: number) => {
+  const toggleTodo = async (id: number, completed: boolean) => {
+    await fetch(`/api/todos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completed }),
+    });
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        todo.id === id ? { ...todo, completed } : todo
       )
     );
     setToast("Task updated ✔️");
   };
 
-  const deleteTodo = (id: number) => {
+  const deleteTodo = async (id: number) => {
+    await fetch(`/api/todos/${id}`, { method: "DELETE" });
     setTodos(todos.filter((todo) => todo.id !== id));
     setToast("Task deleted 🗑️");
   };
+
+  if (loading) return <Loader />;
 
   return (
     <div className="bg-background text-foreground min-h-screen p-6 transition-colors duration-300">
@@ -96,7 +95,7 @@ export default function Home() {
                   type="checkbox"
                   id={`todo-${todo.id}`}
                   checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id)}
+                  onChange={() => toggleTodo(todo.id, !todo.completed)}
                   className="mr-3 cursor-pointer accent-blue-500"
                 />
                 <span className={todo.completed ? "line-through text-gray-400" : ""}>
