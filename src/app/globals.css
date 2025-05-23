@@ -23,3 +23,59 @@
     @apply bg-background text-foreground transition-colors duration-300;
   }
 }
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease forwards;
+  }
+}
+
+/* Perspective for container */
+.perspective-600 {
+  perspective: 600px;
+}
+
+/* Preserve 3d for rotating element */
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Animate rotation */
+@keyframes rotate3d {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+.animate-rotate3d {
+  animation: rotate3d 3s linear infinite;
+}
+
+/* Common face styles */
+.face {
+  position: absolute;
+  width: 64px;   /* same as w-16 */
+  height: 64px;  /* same as h-16 */
+  background: #2563eb; /* blue-600 */
+  border-radius: 0.375rem; /* rounded */
+  box-shadow: 0 5px 10px rgba(0,0,0,0.25);
+  opacity: 0.9;
+  backface-visibility: hidden;
+}
+
+/* Position each face in 3D space */
+/* Half cube size = 32px */
+
+.front  { transform: translateZ(32px); background:#3b82f6; }
+.back   { transform: rotateY(180deg) translateZ(32px); background:#1e40af; }
+.left   { transform: rotateY(-90deg) translateZ(32px); background:#2563eb; }
+.right  { transform: rotateY(90deg) translateZ(32px); background:#1e40af; }
+.top    { transform: rotateX(90deg) translateZ(32px); background:#60a5fa; }
+.bottom { transform: rotateX(-90deg) translateZ(32px); background:#2563eb; }

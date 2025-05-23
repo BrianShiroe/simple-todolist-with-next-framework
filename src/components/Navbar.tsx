@@ -16,6 +16,18 @@ export default function Navbar() {
     const dark = savedTheme === 'dark' || (!savedTheme && prefersDark);
     document.documentElement.classList.toggle('dark', dark);
     setIsDark(dark);
+
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('theme')) {
+        document.documentElement.classList.toggle('dark', e.matches);
+        setIsDark(e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handler);
+
+    return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
   const toggleTheme = () => {
@@ -28,15 +40,26 @@ export default function Navbar() {
   if (!mounted) return null;
 
   return (
-    <nav className="bg-background text-foreground shadow-md px-6 py-4 flex justify-between items-center">
-      <Link href="/" className="text-xl font-bold">
+    <nav className="bg-background text-foreground shadow-md px-6 py-4 flex justify-between items-center transition-colors duration-500">
+      <Link href="/" className="text-xl font-bold select-none">
         📝 To-Do App
       </Link>
       <button
         onClick={toggleTheme}
-        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-sm hover:opacity-80 transition"
+        aria-pressed={isDark}
+        className="flex items-center gap-2 px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-sm hover:opacity-80 transition"
+        title="Toggle light/dark mode"
       >
-        Toggle {isDark ? 'Light' : 'Dark'} Mode
+        <span className="sr-only">Toggle theme</span>
+        <span
+          className={`transform transition-transform duration-500 ${
+            isDark ? 'rotate-0' : 'rotate-180'
+          }`}
+          aria-hidden="true"
+        >
+          {isDark ? '🌙' : '☀️'}
+        </span>
+        {isDark ? 'Light' : 'Dark'} Mode
       </button>
     </nav>
   );
