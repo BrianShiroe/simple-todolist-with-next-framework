@@ -2,22 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --card: #ffffff;
-  --input: #f9fafb;
-  --border: #e5e7eb;
-}
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+    --card: #ffffff;
+    --input: #f9fafb;
+    --border: #e5e7eb;
+  }
 
-.dark {
-  --background: #0f172a;
-  --foreground: #ffffff;
-  --card: #1e293b;
-  --input: #334155;
-  --border: #475569;
-}
+  .dark {
+    --background: #0f172a;
+    --foreground: #ffffff;
+    --card: #1e293b;
+    --input: #334155;
+    --border: #475569;
+  }
 
-body {
-  @apply bg-background text-foreground transition-colors duration-300;
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+  }
 }

@@ -1,6 +1,9 @@
-'use client';
+// todolist-next-js\src\app\page.tsx
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+
+import Loader from "../components/Loader";
 
 interface Todo {
   id: number;
@@ -10,11 +13,12 @@ interface Todo {
 
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(true);
 
   // Load todos from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem('todos');
+    const stored = localStorage.getItem("todos");
     if (stored) {
       setTodos(JSON.parse(stored));
     }
@@ -22,8 +26,15 @@ export default function Home() {
 
   // Save todos to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000); // simulate loading
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <Loader />;
 
   const addTodo = () => {
     if (!input.trim()) return;
@@ -33,21 +44,19 @@ export default function Home() {
       completed: false,
     };
     setTodos([newTodo, ...todos]);
-    setInput('');
+    setInput("");
   };
 
   const toggleTodo = (id: number) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (
-    <div className="bg-background text-foreground min-h-screen p-6 transition-colors duration-300">
+    <div className="bg-card text-foreground min-h-screen p-6 transition-colors duration-300">
       <div className="max-w-xl mx-auto bg-[var(--card)] shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold mb-4">To-Do List</h1>
         <div className="flex gap-2 mb-4">
@@ -58,31 +67,20 @@ export default function Home() {
             placeholder="Add a new task"
             className="flex-1 border border-[var(--border)] rounded px-3 py-2 bg-[var(--input)] text-foreground"
           />
-          <button
-            onClick={addTodo}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
+          <button onClick={addTodo} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
             Add
           </button>
         </div>
         <ul>
           {todos.map((todo) => (
-            <li
-              key={todo.id}
-              className="flex justify-between items-center border-b border-[var(--border)] py-2"
-            >
+            <li key={todo.id} className="flex justify-between items-center border-b border-[var(--border)] py-2">
               <span
                 onClick={() => toggleTodo(todo.id)}
-                className={`cursor-pointer ${
-                  todo.completed ? 'line-through text-gray-400' : ''
-                }`}
+                className={`cursor-pointer ${todo.completed ? "line-through text-gray-400" : ""}`}
               >
                 {todo.text}
               </span>
-              <button
-                onClick={() => deleteTodo(todo.id)}
-                className="text-red-500 hover:text-red-700"
-              >
+              <button onClick={() => deleteTodo(todo.id)} className="text-red-500 hover:text-red-700">
                 Delete
               </button>
             </li>
