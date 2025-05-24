@@ -1,5 +1,5 @@
 ## Requirements
-Git | Node.js | MySQL / MySQL Workbench
+1. Git | 2. Node.js | 3. MySQL / MySQL Workbench
 
 ## SETUP
 1. clone repo.
@@ -18,12 +18,12 @@ node -v
 npm -v
 ```
 
-4. Install project dependencies
+4. Install project dependencies.
 ```bash
 npm install
 ```
 
-5. create a new database by running the init.sql code on a mysql workbench
+5. create a new database by running the init.sql code on a mysql workbench.
 ``` bash
 File path: src/sql/init.sql
 ```
@@ -32,11 +32,11 @@ File path: src/sql/init.sql
 ```bash
 DB_HOST=localhost # MySQL database host (where your database server is running)
 DB_USER=root # MySQL username to connect with
-DB_PASS=passcode # Password for your MySQL user
+DB_PASS=password # Password for your MySQL user
 DB_NAME=todolist # Name of the database to connect to
 ```
 
-7. run development server
+7. run development server.
 ```bash
 npm run dev
 ```
