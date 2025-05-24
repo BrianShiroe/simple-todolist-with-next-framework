@@ -1,7 +1,5 @@
 ## Requirements
-1. Git
-2. Node.js
-3. MySQL / MySQL Workbench
+Git | Node.js | MySQL / MySQL Workbench
 
 ## SETUP
 1. clone repo
