@@ -2,7 +2,7 @@
 Git | Node.js | MySQL / MySQL Workbench
 
 ## SETUP
-1. clone repo
+1. clone repo.
 ```bash
 git clone https://github.com/BrianShiroe/simple-todolist-with-next-framework.git
 ```
