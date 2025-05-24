@@ -8,7 +8,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   return NextResponse.json({ message: "Updated" });
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   await db.query("DELETE FROM todos WHERE id = ?", [params.id]);
   return NextResponse.json({ message: "Deleted" });
 }
+
